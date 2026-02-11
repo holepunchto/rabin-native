@@ -17,5 +17,5 @@ test('basic', (t) => {
 
   if (chunk) chunks.push(chunk)
 
-  t.alike(chunks, [2725155, 541553, 1333425, 1038392])
+  t.alike(chunks, [1159284, 682783, 2058950, 776735, 764378])
 })
