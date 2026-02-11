@@ -23,8 +23,6 @@ const chunk = chunker.final()
 if (chunk) chunks.push(chunk)
 ```
 
-## API
-
 ## License
 
 Apache-2.0
