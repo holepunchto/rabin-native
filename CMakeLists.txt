@@ -8,7 +8,7 @@ project(rabin_native C)
 
 bare_target(target)
 
-fetch_package("github:holepunchto/librabin#99ecf16")
+fetch_package("github:holepunchto/librabin#6ba2233")
 
 add_bare_module(rabin_native_bare)
 

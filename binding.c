@@ -43,7 +43,7 @@ rabin_native_init(js_env_t *env, js_callback_info_t *info) {
 }
 
 static js_value_t *
-rabin_native_update(js_env_t *env, js_callback_info_t *info) {
+rabin_native_push(js_env_t *env, js_callback_info_t *info) {
   int err;
 
   size_t argc = 4;
@@ -72,7 +72,7 @@ rabin_native_update(js_env_t *env, js_callback_info_t *info) {
   err = js_get_value_int64(env, argv[3], &len);
   assert(err == 0);
 
-  len = rabin_update(&hash->context, &data[offset + pos], len - pos);
+  len = rabin_push(&hash->context, &data[offset + pos], len - pos);
 
   js_value_t *result;
   err = js_create_int64(env, len, &result);
@@ -82,7 +82,7 @@ rabin_native_update(js_env_t *env, js_callback_info_t *info) {
 }
 
 static js_value_t *
-rabin_native_final(js_env_t *env, js_callback_info_t *info) {
+rabin_native_end(js_env_t *env, js_callback_info_t *info) {
   int err;
 
   size_t argc = 1;
@@ -97,7 +97,7 @@ rabin_native_final(js_env_t *env, js_callback_info_t *info) {
   err = js_get_arraybuffer_info(env, argv[0], (void **) &hash, NULL);
   assert(err == 0);
 
-  int64_t len = rabin_final(&hash->context);
+  int64_t len = rabin_end(&hash->context);
 
   js_value_t *result;
   err = js_create_int64(env, len, &result);
@@ -120,8 +120,8 @@ rabin_native_exports(js_env_t *env, js_value_t *exports) {
   }
 
   V("init", rabin_native_init)
-  V("update", rabin_native_update)
-  V("final", rabin_native_final)
+  V("push", rabin_native_push)
+  V("end", rabin_native_end)
 #undef V
 
   return exports;

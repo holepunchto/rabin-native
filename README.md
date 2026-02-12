@@ -14,11 +14,11 @@ const rabin = require('rabin-native')
 const chunker = new rabin.Chunker()
 const chunks = []
 
-for (const chunk of chunker.update(shakespeare)) {
+for (const chunk of chunker.push(shakespeare)) {
   chunks.push(chunk)
 }
 
-const chunk = chunker.final()
+const chunk = chunker.end()
 
 if (chunk) chunks.push(chunk)
 ```
