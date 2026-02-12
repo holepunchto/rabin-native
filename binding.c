@@ -58,8 +58,6 @@ rabin_native_push(js_env_t *env, js_callback_info_t *info) {
   err = js_get_arraybuffer_info(env, argv[0], (void **) &hash, NULL);
   assert(err == 0);
 
-  int64_t pos = hash->context.pos;
-
   void *data;
   err = js_get_arraybuffer_info(env, argv[1], &data, NULL);
   assert(err == 0);
@@ -72,7 +70,7 @@ rabin_native_push(js_env_t *env, js_callback_info_t *info) {
   err = js_get_value_int64(env, argv[3], &len);
   assert(err == 0);
 
-  len = rabin_push(&hash->context, &data[offset + pos], len - pos);
+  len = rabin_push(&hash->context, &data[offset], len);
 
   js_value_t *result;
   err = js_create_int64(env, len, &result);

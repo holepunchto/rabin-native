@@ -16,6 +16,8 @@ class RabinChunker {
 
       if (length === 0) return
 
+      data = data.subarray(length)
+
       yield {
         length
       }
