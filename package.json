@@ -42,7 +42,8 @@
   },
   "homepage": "https://github.com/holepunchto/rabin-native#readme",
   "dependencies": {
-    "require-addon": "^1.1.0"
+    "require-addon": "^1.1.0",
+    "streamx": "^2.23.0"
   },
   "devDependencies": {
     "bare-compat-napi": "^1.3.9",

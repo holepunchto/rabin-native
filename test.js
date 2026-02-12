@@ -17,5 +17,30 @@ test('basic', (t) => {
 
   if (chunk) chunks.push(chunk)
 
-  t.alike(chunks, [1159284, 682783, 2058950, 776735, 764378])
+  t.alike(chunks, [
+    { length: 1159284 },
+    { length: 682783 },
+    { length: 2058950 },
+    { length: 776735 },
+    { length: 764378 }
+  ])
+})
+
+test('stream', async (t) => {
+  const chunker = new rabin.ChunkerStream()
+  const chunks = []
+
+  chunker.end(shakespeare)
+
+  for await (const chunk of chunker) {
+    chunks.push(chunk)
+  }
+
+  t.alike(chunks, [
+    { length: 1159284 },
+    { length: 682783 },
+    { length: 2058950 },
+    { length: 776735 },
+    { length: 764378 }
+  ])
 })
