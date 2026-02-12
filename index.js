@@ -1,4 +1,3 @@
-const { Transform } = require('streamx')
 const binding = require('./binding')
 
 class RabinChunker {
@@ -33,31 +32,3 @@ class RabinChunker {
 }
 
 exports.Chunker = RabinChunker
-
-class RabinChunkerStream extends Transform {
-  constructor(opts = {}) {
-    super(opts)
-
-    this._chunker = new RabinChunker(opts)
-  }
-
-  _transform(data, cb) {
-    for (const chunk of this._chunker.update(data)) {
-      this.push(chunk)
-    }
-
-    cb(null)
-  }
-
-  _final(cb) {
-    const chunk = this._chunker.final()
-
-    if (chunk) this.push(chunk)
-
-    this.push(null)
-
-    cb(null)
-  }
-}
-
-exports.ChunkerStream = RabinChunkerStream
