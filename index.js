@@ -3,11 +3,11 @@ const binding = require('./binding')
 class RabinChunker {
   constructor(opts = {}) {
     const {
-      minimumSize = 512 * 1024, // 512 KiB
-      maximumSize = 8 * 1024 * 1024 // 8 MiB
+      minSize = 512 * 1024, // 512 KiB
+      maxSize = 8 * 1024 * 1024 // 8 MiB
     } = opts
 
-    this._handle = binding.init(minimumSize, maximumSize)
+    this._handle = binding.init(minSize, maxSize)
   }
 
   *update(data) {
