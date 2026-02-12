@@ -1,6 +1,6 @@
 # rabin-native
 
-https://github.com/holepunchto/librabin bindings for JavaScript.
+<https://github.com/holepunchto/librabin> bindings for JavaScript.
 
 ```
 npm i rabin-native
