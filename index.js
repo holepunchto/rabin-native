@@ -18,18 +18,16 @@ class RabinChunker {
 
       data = data.subarray(length)
 
-      yield {
-        length
-      }
+      yield binding.lastChunk(this._handle)
     }
   }
 
   end() {
     const length = binding.end(this._handle)
 
-    return {
-      length
-    }
+    if (length === 0) return null
+
+    return binding.lastChunk(this._handle)
   }
 }
 

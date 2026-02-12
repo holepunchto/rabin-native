@@ -30,14 +30,14 @@ rabin_native_init(js_env_t *env, js_callback_info_t *info) {
 
   js_value_t *handle;
 
-  rabin_native_t *hash;
-  err = js_create_arraybuffer(env, sizeof(rabin_native_t), (void **) &hash, &handle);
+  rabin_native_t *chunker;
+  err = js_create_arraybuffer(env, sizeof(rabin_native_t), (void **) &chunker, &handle);
   assert(err == 0);
 
-  rabin_init(&hash->context);
+  rabin_init(&chunker->context);
 
-  hash->context.chunk_min = min_size;
-  hash->context.chunk_max = max_size;
+  chunker->context.chunk_min = min_size;
+  chunker->context.chunk_max = max_size;
 
   return handle;
 }
@@ -54,8 +54,8 @@ rabin_native_push(js_env_t *env, js_callback_info_t *info) {
 
   assert(argc == 4);
 
-  rabin_native_t *hash;
-  err = js_get_arraybuffer_info(env, argv[0], (void **) &hash, NULL);
+  rabin_native_t *chunker;
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &chunker, NULL);
   assert(err == 0);
 
   void *data;
@@ -70,7 +70,7 @@ rabin_native_push(js_env_t *env, js_callback_info_t *info) {
   err = js_get_value_int64(env, argv[3], &len);
   assert(err == 0);
 
-  len = rabin_push(&hash->context, &data[offset], len);
+  len = rabin_push(&chunker->context, &data[offset], len);
 
   js_value_t *result;
   err = js_create_int64(env, len, &result);
@@ -91,15 +91,51 @@ rabin_native_end(js_env_t *env, js_callback_info_t *info) {
 
   assert(argc == 1);
 
-  rabin_native_t *hash;
-  err = js_get_arraybuffer_info(env, argv[0], (void **) &hash, NULL);
+  rabin_native_t *chunker;
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &chunker, NULL);
   assert(err == 0);
 
-  int64_t len = rabin_end(&hash->context);
+  int64_t len = rabin_end(&chunker->context);
 
   js_value_t *result;
   err = js_create_int64(env, len, &result);
   assert(err == 0);
+
+  return result;
+}
+
+static js_value_t *
+rabin_native_last_chunk(js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 1;
+  js_value_t *argv[1];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 1);
+
+  rabin_native_t *chunker;
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &chunker, NULL);
+  assert(err == 0);
+
+  js_value_t *result;
+  err = js_create_object(env, &result);
+  assert(err == 0);
+
+#define V(name, property) \
+  { \
+    js_value_t *val; \
+    err = js_create_int64(env, chunker->context.last_chunk.property, &val); \
+    assert(err == 0); \
+    err = js_set_named_property(env, result, name, val); \
+    assert(err == 0); \
+  }
+
+  V("length", length)
+  V("offset", offset)
+#undef V
 
   return result;
 }
@@ -120,6 +156,7 @@ rabin_native_exports(js_env_t *env, js_value_t *exports) {
   V("init", rabin_native_init)
   V("push", rabin_native_push)
   V("end", rabin_native_end)
+  V("lastChunk", rabin_native_last_chunk)
 #undef V
 
   return exports;

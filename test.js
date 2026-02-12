@@ -9,8 +9,14 @@ test('basic', (t) => {
   const chunker = new rabin.Chunker()
   const chunks = []
 
-  for (const chunk of chunker.push(shakespeare)) {
-    chunks.push(chunk)
+  let data = Buffer.from(shakespeare)
+
+  while (data.byteLength > 0) {
+    for (const chunk of chunker.push(data.subarray(0, 1024))) {
+      chunks.push(chunk)
+    }
+
+    data = data.subarray(1024)
   }
 
   const chunk = chunker.end()
@@ -18,10 +24,10 @@ test('basic', (t) => {
   if (chunk) chunks.push(chunk)
 
   t.alike(chunks, [
-    { length: 1159284 },
-    { length: 682783 },
-    { length: 2058950 },
-    { length: 776735 },
-    { length: 764378 }
+    { length: 1159284, offset: 0 },
+    { length: 682783, offset: 1159284 },
+    { length: 2058950, offset: 1842067 },
+    { length: 776735, offset: 3901017 },
+    { length: 764378, offset: 4677752 }
   ])
 })
