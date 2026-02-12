@@ -1,6 +1,6 @@
 {
   "name": "rabin-native",
-  "version": "2.0.0-4",
+  "version": "2.0.0-5",
   "description": "librabin bindings for JavaScript",
   "exports": {
     "./package": "./package.json",
